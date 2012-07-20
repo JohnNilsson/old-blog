@@ -1,11 +1,10 @@
-title : Blog Title
-tagline: Blog Tagline
+title : My Mind to Your Mind
+tagline: My Thoughts to Your Thoughts
 author :
-  name : Firstname Lastname
-  email : blah@email.test
-  github : username
-  twitter : username
-  feedburner : feedname
+  name : John Nilsson
+  email : john@milsson.nu
+  github : JohnNilsson
+  twitter : CuriousSkeptic
 
 navigation :
   - archive.html
