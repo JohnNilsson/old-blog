@@ -1,5 +1,6 @@
 ---
 title: Type classes for C# programmers
+description: An introduction to polymorphism by type class aimed at C# programmers
 date: '2012-08-15'
 tags: [code, c#, type classes]
 encoding: utf-8
