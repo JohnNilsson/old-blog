@@ -17,6 +17,7 @@ $$(x \centerdot y) \centerdot z = x \centerdot (y \centerdot z)$$
 $$e \centerdot x = x = x \centerdot e$$
 
 In Scala we can encode this as
+
 ```scala
 class Monoid[T](id: T, op: (T, T) => T)
 ```
@@ -57,6 +58,7 @@ The category laws can thus be expressed as:
 <aside>I'm using $\circ$ in what's called <dfn>diagrammatic order</dfn> here because I think it makes more sense, math texts usually put it the other way around though.</aside>
 
 Let's see if we can encode this in Scala:
+
 ```scala
 trait Category {
   type →[_,_]
@@ -75,5 +77,6 @@ class Monoid[T](id: T, op: (T, T) ⇒ T) extends Category {
   def compose[A, B, C] = op
 }
 ```
+
 <aside>
 Btw, the fact that higher kinded types, like $\rightarrow\[A,B\]$ above, can return any type is kind of interesting. Having damanged my brain from to much Java I assumed for a long time that a higher kinded types only abstracted over parameterized classes with the same arity. They do not though, they are just type level functions, free to return what ever they want, similar in spirtit to value level functions.</aside>
