@@ -17,9 +17,9 @@ $$(x \centerdot y) \centerdot z = x \centerdot (y \centerdot z)$$
 $$e \centerdot x = x = x \centerdot e$$
 
 In Scala we can encode this as
-<pre class="brush: scala">
-    class Monoid[T](id: T, op: (T, T) => T)
-</pre>
+```scala
+class Monoid[T](id: T, op: (T, T) => T)
+```
 
 Typical monoids most of us are familiar with are addition and multiplication with their respective identity $(\mathbb{R},+,0)$ and $(\mathbb{R},\times,1)$. These examples happens to also be commutative but this is not a requirement for monads. As an example of a non-commutative monad consider string concatenation.
 
@@ -29,10 +29,10 @@ Associativity lets us forget evaluation order, also very useful for programs. No
 
 And finally the identity gives us a way out of corner cases in various situations. For example when implementing a generic sum in Scala the identity can be used when summing the empty Seq.
 
-<pre class="brush: scala">
-    def sum[T](elems: Seq[T])(implicit m: Monoid[T]) =
+```scala
+def sum[T](elems: Seq[T])(implicit m: Monoid[T]) =
       elems.fold(m.id)(m.op)
-</pre>
+```
 
 
 Monoids as categories
@@ -57,23 +57,23 @@ The category laws can thus be expressed as:
 <aside>I'm using $\circ$ in what's called <dfn>diagrammatic order</dfn> here because I think it makes more sense, math texts usually put it the other way around though.</aside>
 
 Let's see if we can encode this in Scala:
-<pre class="brush: scala">
-    trait Category {
-      type →[_,_]
+```scala
+trait Category {
+  type →[_,_]
 
-      def id[A]: A → A
-      def compose[A, B, C]: (A → B, B → C) ⇒ A → C
-    }
-</pre>
+  def id[A]: A → A
+  def compose[A, B, C]: (A → B, B → C) ⇒ A → C
+}
+```
 
 To construct a category out of our monoid definition above we can take the set to be an object of the category, and its members be <dfn title="A fancy word for a morphism with the same domain and codomain.">endomorphisms</dfn> on this object. In fact all objects in a category forms monoids in this sense.
 
-<pre class="brush: scala">
-    class Monoid[T](id: T, op: (T, T) ⇒ T) extends Category {
-      type →[A,B] = T
-      def id[A] = id
-      def compose[A, B, C] = op
-    }
-</pre>
+```scala
+class Monoid[T](id: T, op: (T, T) ⇒ T) extends Category {
+  type →[A,B] = T
+  def id[A] = id
+  def compose[A, B, C] = op
+}
+```
 <aside>
 Btw, the fact that higher kinded types, like $\rightarrow\[A,B\]$ above, can return any type is kind of interesting. Having damanged my brain from to much Java I assumed for a long time that a higher kinded types only abstracted over parameterized classes with the same arity. They do not though, they are just type level functions, free to return what ever they want, similar in spirtit to value level functions.</aside>
