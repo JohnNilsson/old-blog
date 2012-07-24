@@ -1,4 +1,4 @@
-layout : google
+layout : false
 google : 
     tracking_id : 'UA-123-12'
 getclicky :
