@@ -39,8 +39,7 @@ We could try to implement this by simple case analysis like so:
 
 ```c#
 public static object Sum(this IEnumerable vals, object zero) {
-    if (zero is int)
-    {
+    if (zero is int) {
         int sum = (int)zero;
         foreach (int i in (IEnumerable<int>)vals)
             sum += i;
@@ -125,7 +124,7 @@ We can fix this with type parameters, which I'll include here just so you can st
 about it.
 
 ```c#
-public interface Addable<ThisType> where ThisType : Addable<ThisType>
+public interface Addable<ThisType> where ThisType : Addable<ThisType>  
 {
     ThisType Add(ThisType addend);
 }
@@ -193,8 +192,7 @@ public sealed class Monoid<T> : TypeClass
     public readonly T Zero;
     public readonly Func<T, T, T> Add;
 
-    public Monoid(T zero, Func<T, T, T> add)
-    {
+    public Monoid(T zero, Func<T, T, T> add) {
         Law("Left identity",    (T x) => add(zero, x).Equals(x));
         Law("Right identity",   (T x) => add(x, zero).Equals(x));
         Law("Associative",      (T x, T y, T z) =>
@@ -210,8 +208,7 @@ public sealed class Monoid<T> : TypeClass
 Given this contract we can use it as a dependency for our Sum:
 
 ```c#
-public static T Sum<T>(this IEnumerable<T> summables, Monoid<T> mon)
-{
+public static T Sum<T>(this IEnumerable<T> summables, Monoid<T> mon) {
     return summables.Aggregate(mon.Zero, mon.Add);
 }
 ```
@@ -237,8 +234,7 @@ In C# we have no such luxury at compile time, but could use
 dependency injection to provide a similar service at runtime.
 
 ```c#
-public static T Sum<T>(this IEnumerable<T> ts)
-{
+public static T Sum<T>(this IEnumerable<T> ts) {
     var mon = ObjectFactory.GetInstance<Monoid<T>>();
     return ts.Aggregate(mon.Zero, mon.Add);
 }
@@ -252,16 +248,14 @@ We could even generate this code using a T4 template.
 public static readonly Monoid<int> INT_ADDITION_MONOID =
     new Monoid<int>(0, (x, y) => x + y);
 
-public static int Sum(this IEnumerable<int> vals)
-{
+public static int Sum(this IEnumerable<int> vals) {
     return vals.Sum(INT_ADDITION_MONOID);
 }
 
 public static readonly Monoid<string> STRING_MONOID =
     new Monoid<string>(string.Empty, string.Concat);
 
-public static string Sum(this IEnumerable<string> vals)
-{
+public static string Sum(this IEnumerable<string> vals) {
     return vals.Sum(STRING_MONOID);
 }
 ```
